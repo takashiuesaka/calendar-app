@@ -1,5 +1,6 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { getConstantValue } from 'typescript';
 
 const Calendar = () => {
 
@@ -22,12 +23,30 @@ const Calendar = () => {
         return date.add(6 - youbiNum, "days");
     }
 
-    useEffect(() => {
-        const startDate = getStartDate();
+    const getCalendar = () => {
+        let startDate = getStartDate();
         const endDate = getEndDate();
         const weekNumber = Math.ceil(endDate.diff(startDate, "days") / 7);
 
-        console.log(weekNumber);
+        let calendars = [];
+        for (let week = 0; week < weekNumber; week++) {
+            let weekRow = [];
+            for (let day = 0; day < 7; day++) {
+                weekRow.push({
+                    date: startDate.get("date")
+                });
+
+                startDate.add(1, "days");
+            }
+
+            calendars.push(weekRow);
+        }
+
+        return calendars;
+    }
+
+    useEffect(() => {
+        console.log(getCalendar());
     }, []);
 
     return <><p>Hello World</p></>
