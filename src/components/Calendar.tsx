@@ -1,10 +1,10 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { getConstantValue } from 'typescript';
 
 const Calendar = () => {
 
     const [currentDate,] = useState(moment());
+    const [calendars, setCalendars] = useState<{ date: number; }[][]>([]);
 
     const getStartDate = () => {
         const date = moment(currentDate).startOf("month");
@@ -46,10 +46,24 @@ const Calendar = () => {
     }
 
     useEffect(() => {
-        console.log(getCalendar());
+        //        console.log(getCalendar());
+        setCalendars(getCalendar());
     }, []);
 
-    return <><p>Hello World</p></>
+    return (
+        <>
+            <h2>カレンダー{currentDate.format("LLL")}</h2>
+            {
+                calendars.map((week) => {
+                    return (
+                        <div style={{ display: 'flex' }}>
+                            {week.map((day) => {
+                                return (<div>{day.date}</div>);
+                            })}
+                        </div>);
+                })
+            }
+        </>);
 };
 
 export default Calendar;
