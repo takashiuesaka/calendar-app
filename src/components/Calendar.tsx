@@ -53,14 +53,14 @@ const Calendar = () => {
     return (
         <>
             <h2>カレンダー{currentDate.format("LLL")}</h2>
-            <div style={{ maxWidth: '900px', borderTop: '5px solid red' }}>
+            <div style={{ maxWidth: '900px', borderTop: '1px solid grey' }}>
                 {
                     calendars.map((week, rowIndex) => {
                         return (
-                            <div key={rowIndex} style={{ display: 'flex', borderLeft: '5px solid green' }}>
+                            <div key={rowIndex} style={{ display: 'flex', borderLeft: '1px solid gray' }}>
                                 {week.map((day, colIndex) => {
                                     return (
-                                        <div key={colIndex} style={{ flex: 1, minHeight: '125px', borderRight: '5px solid blue', borderBottom: '5px solid blue' }}>
+                                        <div key={colIndex} style={{ flex: 1, minHeight: '125px', borderRight: '1px solid gray', borderBottom: '1px solid gray' }}>
                                             {day.date}
                                         </div>);
                                 })}
