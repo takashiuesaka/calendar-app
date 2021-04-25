@@ -1,5 +1,6 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import './Calendar.css'
 
 const Calendar = () => {
 
@@ -64,26 +65,30 @@ const Calendar = () => {
     }, [currentDate]);
 
     return (
-        <>
+        <div className='content'>
             <h2>カレンダー{currentDate.format("LLL")}</h2>
-            <button onClick={prevMonth}>前の月</button>
-            <button onClick={nextMonth}>次の月</button>
-            <div style={{ maxWidth: '900px', borderTop: '1px solid grey' }}>
+            <div className='button-area'>
+                <button onClick={prevMonth}>前の月</button>
+                <button onClick={nextMonth}>次の月</button>
+            </div>
+            <div className='calendar'>
                 {
                     calendars.map((week, rowIndex) => {
                         return (
-                            <div key={rowIndex} style={{ display: 'flex', borderLeft: '1px solid gray' }}>
+                            <div key={rowIndex} className='calendar-weekly'>
                                 {week.map((day, colIndex) => {
                                     return (
-                                        <div key={colIndex} style={{ flex: 1, minHeight: '125px', borderRight: '1px solid gray', borderBottom: '1px solid gray' }}>
-                                            {day.date}
+                                        <div key={colIndex} className='calendar-daily'>
+                                            <div className='calendar-day'>
+                                                {day.date}
+                                            </div>
                                         </div>);
                                 })}
                             </div>);
                     })
                 }
             </div>
-        </>);
+        </div>);
 };
 
 export default Calendar;
