@@ -3,29 +3,29 @@ import React, { useEffect, useState } from 'react';
 
 const Calendar = () => {
 
-    const [currentDate,] = useState(moment());
+    const [currentDate, setCurrentDate] = useState(moment());
     const [calendars, setCalendars] = useState<{ date: number; }[][]>([]);
 
-    const getStartDate = () => {
-        const date = moment(currentDate).startOf("month");
-        const youbiNum = date.day();
+    const getStartDate = (date: moment.Moment) => {
+        const startDate = moment(date).startOf("month");
+        const youbiNum = startDate.day();
         // console.log(youbiNum); // 今月１日の曜日を数字で表したもの
 
         // つまりカレンダーの第1週の日曜日の日付は
-        return date.subtract(youbiNum, "days");
+        return startDate.subtract(youbiNum, "days");
     };
 
-    const getEndDate = () => {
-        const date = moment(currentDate).endOf("month");
-        const youbiNum = date.day();
+    const getEndDate = (date: moment.Moment) => {
+        const endDate = moment(date).endOf("month");
+        const youbiNum = endDate.day();
         // console.log(youbiNum); // 今月末日の曜日を数字で表したもの
 
-        return date.add(6 - youbiNum, "days");
+        return endDate.add(6 - youbiNum, "days");
     }
 
-    const getCalendar = () => {
-        let startDate = getStartDate();
-        const endDate = getEndDate();
+    const getCalendar = (date: moment.Moment) => {
+        let startDate = getStartDate(date);
+        const endDate = getEndDate(date);
         const weekNumber = Math.ceil(endDate.diff(startDate, "days") / 7);
 
         let calendars = [];
@@ -45,14 +45,31 @@ const Calendar = () => {
         return calendars;
     }
 
+    const nextMonth = () => {
+        setCurrentDate((current) => {
+            const nextMonth = moment(current).add(1, "month");
+            setCalendars(getCalendar(nextMonth))
+            return nextMonth
+        });
+    }
+
+    const prevMonth = () => {
+        setCurrentDate((current) => {
+            const prevMonth = moment(current).subtract(1, "month");
+            setCalendars(getCalendar(prevMonth));
+            return prevMonth;
+        });
+    }
+
     useEffect(() => {
-        //        console.log(getCalendar());
-        setCalendars(getCalendar());
+        setCalendars(getCalendar(currentDate));
     }, []);
 
     return (
         <>
             <h2>カレンダー{currentDate.format("LLL")}</h2>
+            <button onClick={prevMonth}>前の月</button>
+            <button onClick={nextMonth}>次の月</button>
             <div style={{ maxWidth: '900px', borderTop: '1px solid grey' }}>
                 {
                     calendars.map((week, rowIndex) => {
