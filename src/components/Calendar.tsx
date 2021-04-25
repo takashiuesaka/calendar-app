@@ -48,7 +48,6 @@ const Calendar = () => {
     const nextMonth = () => {
         setCurrentDate((current) => {
             const nextMonth = moment(current).add(1, "month");
-            setCalendars(getCalendar(nextMonth))
             return nextMonth
         });
     }
@@ -56,14 +55,13 @@ const Calendar = () => {
     const prevMonth = () => {
         setCurrentDate((current) => {
             const prevMonth = moment(current).subtract(1, "month");
-            setCalendars(getCalendar(prevMonth));
             return prevMonth;
         });
     }
 
     useEffect(() => {
         setCalendars(getCalendar(currentDate));
-    }, []);
+    }, [currentDate]);
 
     return (
         <>
