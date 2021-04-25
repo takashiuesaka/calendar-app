@@ -53,16 +53,21 @@ const Calendar = () => {
     return (
         <>
             <h2>カレンダー{currentDate.format("LLL")}</h2>
-            {
-                calendars.map((week) => {
-                    return (
-                        <div style={{ display: 'flex' }}>
-                            {week.map((day) => {
-                                return (<div>{day.date}</div>);
-                            })}
-                        </div>);
-                })
-            }
+            <div style={{ maxWidth: '900px', borderTop: '5px solid red' }}>
+                {
+                    calendars.map((week, rowIndex) => {
+                        return (
+                            <div key={rowIndex} style={{ display: 'flex', borderLeft: '5px solid green' }}>
+                                {week.map((day, colIndex) => {
+                                    return (
+                                        <div key={colIndex} style={{ flex: 1, minHeight: '125px', borderRight: '5px solid blue', borderBottom: '5px solid blue' }}>
+                                            {day.date}
+                                        </div>);
+                                })}
+                            </div>);
+                    })
+                }
+            </div>
         </>);
 };
 
