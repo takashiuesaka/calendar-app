@@ -66,7 +66,7 @@ const Calendar = () => {
 
     return (
         <div className='content'>
-            <h2>カレンダー{currentDate.format("LLL")}</h2>
+            <h2>カレンダー {currentDate.format('YYYY[年]M[月]')}</h2>
             <div className='button-area'>
                 <button onClick={prevMonth}>前の月</button>
                 <button onClick={nextMonth}>次の月</button>
