@@ -5,7 +5,8 @@ import './Calendar.css'
 const Calendar = () => {
 
     const [currentDate, setCurrentDate] = useState(moment());
-    const [calendars, setCalendars] = useState<{ date: number; }[][]>([]);
+    const [currentMonth, setCurrentMonth] = useState<string>();
+    const [calendars, setCalendars] = useState<{ date: number, month: string }[][]>([]);
 
     const getStartDate = (date: moment.Moment) => {
         const startDate = moment(date).startOf("month");
@@ -25,19 +26,20 @@ const Calendar = () => {
     }
 
     const getCalendar = (date: moment.Moment) => {
-        let startDate = getStartDate(date);
+        let calendarDate = getStartDate(date);
         const endDate = getEndDate(date);
-        const weekNumber = Math.ceil(endDate.diff(startDate, "days") / 7);
+        const weekNumber = Math.ceil(endDate.diff(calendarDate, "days") / 7);
 
         let calendars = [];
         for (let week = 0; week < weekNumber; week++) {
             let weekRow = [];
             for (let day = 0; day < 7; day++) {
                 weekRow.push({
-                    date: startDate.get("date")
+                    date: calendarDate.get("date"),
+                    month: calendarDate.format('YYYY-MM')
                 });
 
-                startDate.add(1, "days");
+                calendarDate.add(1, "days");
             }
 
             calendars.push(weekRow);
@@ -73,6 +75,7 @@ const Calendar = () => {
 
     useEffect(() => {
         setCalendars(getCalendar(currentDate));
+        setCurrentMonth(currentDate.format('YYYY-MM'));
     }, [currentDate]);
 
     return (
@@ -91,7 +94,7 @@ const Calendar = () => {
                                 {
                                     week.map((day, colIndex) => {
                                         return (
-                                            <div key={colIndex} className='calendar-daily'>
+                                            <div key={colIndex} className={'calendar-daily' + (day.month !== currentMonth ? ' outside' : '')}>
                                                 <div className='calendar-day'>
                                                     {day.date}
                                                 </div>
