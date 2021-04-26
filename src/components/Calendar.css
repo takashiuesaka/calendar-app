@@ -29,3 +29,9 @@
 .calendar-day{
     text-align: center;
 }
+.calendar-youbi{
+    flex:1;
+    border-right:1px solid #E0E0E0;
+    margin-right:-1px;
+    text-align:center;
+}

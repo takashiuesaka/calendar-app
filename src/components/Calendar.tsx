@@ -60,6 +60,17 @@ const Calendar = () => {
         });
     }
 
+    const renderYoubi = () => {
+
+        const week = ["日", "月", "火", "水", "木", "金", "土"];
+
+        return (
+            <div className='calendar-weekly'>
+                {week.map((youbi) => <div className='calendar-youbi'>{youbi}</div>)}
+            </div>
+        );
+    }
+
     useEffect(() => {
         setCalendars(getCalendar(currentDate));
     }, [currentDate]);
@@ -72,18 +83,21 @@ const Calendar = () => {
                 <button onClick={nextMonth}>次の月</button>
             </div>
             <div className='calendar'>
+                {renderYoubi()}
                 {
                     calendars.map((week, rowIndex) => {
                         return (
                             <div key={rowIndex} className='calendar-weekly'>
-                                {week.map((day, colIndex) => {
-                                    return (
-                                        <div key={colIndex} className='calendar-daily'>
-                                            <div className='calendar-day'>
-                                                {day.date}
+                                {
+                                    week.map((day, colIndex) => {
+                                        return (
+                                            <div key={colIndex} className='calendar-daily'>
+                                                <div className='calendar-day'>
+                                                    {day.date}
+                                                </div>
                                             </div>
-                                        </div>);
-                                })}
+                                        );
+                                    })}
                             </div>);
                     })
                 }
