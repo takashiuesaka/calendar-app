@@ -6,7 +6,9 @@ const Calendar = () => {
 
     const [currentDate, setCurrentDate] = useState(moment());
     const [currentMonth, setCurrentMonth] = useState<string>();
-    const [calendars, setCalendars] = useState<{ date: number, month: string, dayEvents: { id: number, name: string, start: string, end: string, color: string }[] }[][]>([]);
+
+    type dayEvent = { id: number, name: string, start: string, end: string, color: string };
+    const [calendars, setCalendars] = useState<{ date: number, month: string, dayEvents: dayEvent[] }[][]>([]);
 
     const getStartDate = (date: moment.Moment) => {
         const startDate = moment(date).startOf("month");
@@ -75,7 +77,7 @@ const Calendar = () => {
         );
     }
 
-    const events: { id: number, name: string, start: string, end: string, color: string }[] = [
+    const events: dayEvent[] = [
         { id: 1, name: "ミーティング", start: "2021-01-01", end: "2021-01-01", color: "blue" },
         { id: 2, name: "イベント", start: "2021-01-02", end: "2021-01-03", color: "limegreen" },
         { id: 3, name: "会議", start: "2021-01-06", end: "2021-01-06", color: "deepskyblue" },
@@ -98,15 +100,14 @@ const Calendar = () => {
     ];
 
     const getDayEvents = (date: moment.Moment) => {
-        return events.filter(event => {
+        let dayEvents: dayEvent[] = [];
+        events.forEach(event => {
             let startDate = moment(event.start).format('YYYY-MM-DD')
-            let endDate = moment(event.end).format('YYYY-MM-DD')
             let Date = date.format('YYYY-MM-DD')
-            if (startDate <= Date && endDate >= Date)
-                return true;
-
-            return false;
+            if (startDate === Date)
+                dayEvents.push(event);
         });
+        return dayEvents;
     };
 
     useEffect(() => {
