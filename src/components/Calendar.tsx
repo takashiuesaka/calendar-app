@@ -7,7 +7,7 @@ const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(moment());
     const [currentMonth, setCurrentMonth] = useState<string>();
 
-    type dayEvent = { id: number, name: string, start: string, end: string, color: string };
+    type dayEvent = { id: number, name: string, start: string, end: string, color: string, width: number };
     const [calendars, setCalendars] = useState<{ date: number, month: string, dayEvents: dayEvent[] }[][]>([]);
 
     const getStartDate = (date: moment.Moment) => {
@@ -77,7 +77,7 @@ const Calendar = () => {
         );
     }
 
-    const events: dayEvent[] = [
+    const events = [
         { id: 1, name: "ミーティング", start: "2021-01-01", end: "2021-01-01", color: "blue" },
         { id: 2, name: "イベント", start: "2021-01-02", end: "2021-01-03", color: "limegreen" },
         { id: 3, name: "会議", start: "2021-01-06", end: "2021-01-06", color: "deepskyblue" },
@@ -100,12 +100,18 @@ const Calendar = () => {
     ];
 
     const getDayEvents = (date: moment.Moment) => {
-        let dayEvents: dayEvent[] = [];
+        const dayEvents: dayEvent[] = [];
         events.forEach(event => {
-            let startDate = moment(event.start).format('YYYY-MM-DD')
-            let Date = date.format('YYYY-MM-DD')
-            if (startDate === Date)
-                dayEvents.push(event);
+            const startDate = moment(event.start).format('YYYY-MM-DD')
+            const endDate = moment(event.end).format('YYYY-MM-DD')
+            const Date = date.format('YYYY-MM-DD')
+
+            if (startDate === Date) {
+                const betweenDays = moment(endDate).diff(moment(startDate), "days");
+                const width = betweenDays * 100 + 95;
+
+                dayEvents.push({ ...event, width });
+            }
         });
         return dayEvents;
     };
@@ -139,7 +145,7 @@ const Calendar = () => {
                                                     day.dayEvents.map(event => {
                                                         return (
                                                             <div key={event.id}>
-                                                                <div className='calendar-event' style={{ backgroundColor: event.color }} draggable='true'>
+                                                                <div className='calendar-event' style={{ width: event.width + '%', backgroundColor: event.color }} draggable='true'>
                                                                     {event.name}
                                                                 </div>
                                                             </div>
