@@ -36,7 +36,7 @@ const Calendar = () => {
         for (let week = 0; week < weekNumber; week++) {
             let weekRow = [];
             for (let day = 0; day < 7; day++) {
-                let dayEvents = getDayEvents(calendarDate);
+                let dayEvents = getDayEvents(calendarDate, day);
                 weekRow.push({
                     date: calendarDate.get("date"),
                     month: calendarDate.format('YYYY-MM'),
@@ -99,7 +99,7 @@ const Calendar = () => {
         { id: 20, name: "誕生日", start: "2021-01-30", end: "2021-01-30", color: "orange" },
     ];
 
-    const getDayEvents = (date: moment.Moment) => {
+    const getDayEvents = (date: moment.Moment, day: number) => {
         const dayEvents: dayEvent[] = [];
         events.forEach(event => {
             const startDate = moment(event.start).format('YYYY-MM-DD')
@@ -107,14 +107,23 @@ const Calendar = () => {
             const Date = date.format('YYYY-MM-DD')
 
             if (startDate === Date) {
-                const betweenDays = moment(endDate).diff(moment(startDate), "days");
-                const width = betweenDays * 100 + 95;
+                // const betweenDays = moment(endDate).diff(moment(startDate), "days");
+                const width = getEventWidth(startDate, endDate, day);
 
                 dayEvents.push({ ...event, width });
             }
         });
         return dayEvents;
     };
+
+    const getEventWidth = (start: string, end: string, day: number) => {
+        const betweenDays = moment(end).diff(moment(start), "days")
+        if (betweenDays > 6 - day) {
+            return (6 - day) * 100 + 95;
+        } else {
+            return betweenDays * 100 + 95;
+        }
+    }
 
     useEffect(() => {
         setCalendars(getCalendar(currentDate));
