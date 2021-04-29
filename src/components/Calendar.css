@@ -38,3 +38,9 @@
 .outside{
     background-color: #f7f7f7;
 }
+.calendar-event{
+    color:white;
+    margin-bottom:1px;
+    height:25px;
+    line-height:25px;
+}
