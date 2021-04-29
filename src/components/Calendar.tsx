@@ -138,7 +138,7 @@ const Calendar = () => {
                                                     day.dayEvents.map(event => {
                                                         return (
                                                             <div key={event.id}>
-                                                                <div className='calendar-event' style={{ backgroundColor: event.color }}>
+                                                                <div className='calendar-event' style={{ backgroundColor: event.color }} draggable='true'>
                                                                     {event.name}
                                                                 </div>
                                                             </div>
