@@ -107,10 +107,11 @@ const Calendar = () => {
             const Date = date.format('YYYY-MM-DD')
 
             if (startDate === Date) {
-                // const betweenDays = moment(endDate).diff(moment(startDate), "days");
                 const width = getEventWidth(startDate, endDate, day);
-
                 dayEvents.push({ ...event, width });
+            } else if (startDate < Date && Date <= endDate && day === 0) {
+                const width = getEventWidth(Date, endDate, day)
+                dayEvents.push({ ...event, width })
             }
         });
         return dayEvents;
