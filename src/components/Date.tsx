@@ -1,13 +1,14 @@
-import { DragEventHandler } from "react";
 import { DateData } from "./DateData";
 
 const Date = (props: { id: number, date: DateData }) => {
 
     const { id, date } = props;
 
-    const dragStart = (eventId: number) => {
+    const dragStart = (e: React.DragEvent<HTMLDivElement>, eventId: number) => {
         console.log(eventId);
-        return;
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.dropEffect = "move";
+        e.dataTransfer.setData("eventId", eventId);
     }
 
     return (
@@ -26,7 +27,7 @@ const Date = (props: { id: number, date: DateData }) => {
                                     }
                                     else {
                                         return (
-                                            <div className='calendar-event' style={{ width: event.getWidth(date.date) + '%', backgroundColor: event.color }} draggable='true' onDragStart={(e) => dragStart(event.id)}>
+                                            <div className='calendar-event' style={{ width: event.getWidth(date.date) + '%', backgroundColor: event.color }} draggable='true' onDragStart={(e) => dragStart(e, event.id)}>
                                                 {event.name}
                                             </div>
                                         );
