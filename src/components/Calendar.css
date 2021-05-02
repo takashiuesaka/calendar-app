@@ -43,4 +43,8 @@
     margin-bottom:1px;
     height:25px;
     line-height:25px;
+    position: relative;
+    z-index:1;
+    border-radius:4px;
+    padding-left:4px;
 }
