@@ -1,14 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import { CalendarData, Date } from './CalendarData'
+import { CalendarData } from './CalendarData';
+import Week from './Week';
+import { ServerAccess } from './ServerAccess';
 import './Calendar.css'
 
 const Calendar = () => {
 
-    const [calendarData, setCalendarData] = useState(new CalendarData(moment()))
+    const [calendarData, setCalendarData] = useState<CalendarData | undefined>();
 
-    const prevMonth = () => setCalendarData(data => data.getPrevMonthCalendar());
-    const nextMonth = () => setCalendarData(data => data.getNextMonthCalendar());
+    const prevMonth = () => {
+        setCalendarData(data => {
+            const newData = data?.getPrevMonthCalendar();
+            // Server Access
+            const events = ServerAccess();
+            newData?.setEvents(events);
+            return newData;
+        });
+    }
+
+    const nextMonth = () => {
+        setCalendarData(data => {
+            const newData = data?.getNextMonthCalendar();
+            // Server Access
+            const events = ServerAccess();
+            newData?.setEvents(events);
+            return newData;
+        });
+    }
 
     const renderYoubi = () => {
 
@@ -16,14 +35,24 @@ const Calendar = () => {
 
         return (
             <div className='calendar-weekly'>
-                {week.map((youbi) => <div className='calendar-youbi'>{youbi}</div>)}
+                {week.map((youbi, index) => <div key={index} className='calendar-youbi'>{youbi}</div>)}
             </div>
         );
     }
 
+    useEffect(() => {
+        if (calendarData === undefined) {
+            const defaultData = new CalendarData(moment());
+            // Server Access
+            const events = ServerAccess();
+            defaultData.setEvents(events);
+            setCalendarData(defaultData);
+        }
+    }, [calendarData])
+
     return (
         <div className='content'>
-            <h2>カレンダー {calendarData.currentDate.format('YYYY[年]M[月]')}</h2>
+            <h2>カレンダー {calendarData?.currentDate.format('YYYY[年]M[月]')}</h2>
             <div className='button-area'>
                 <button onClick={prevMonth}>前の月</button>
                 <button onClick={nextMonth}>次の月</button>
@@ -31,21 +60,8 @@ const Calendar = () => {
             <div className='calendar'>
                 {renderYoubi()}
                 {
-                    calendarData.getWeeks().map((week, weekIndex) => {
-                        return (
-                            <div key={weekIndex} className='calendar-weekly'>
-                                {
-                                    week.map((date, colIndex) => {
-                                        return (
-                                            <div key={colIndex} className={'calendar-daily' + (!calendarData.isContained(date) ? ' outside' : '')}>
-                                                <div className='calendar-day'>
-                                                    {date.dateNumber}
-                                                </div>
-                                            </div>
-                                        );
-                                    })
-                                }
-                            </div>);
+                    calendarData?.dateArrayByWeek.map((weekData, weekIndex) => {
+                        return <Week id={weekIndex} dateArray={weekData} />
                     })
                 }
             </div>

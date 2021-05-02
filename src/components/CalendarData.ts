@@ -1,11 +1,33 @@
 import moment from "moment";
 
+import { DateData } from './DateData';
+import { EventData } from "./EventData";
+
 export class CalendarData {
 
     #currentDate: moment.Moment;
+    #dateArrayByWeek: DateData[][];
 
     constructor(currentDate: moment.Moment) {
         this.#currentDate = currentDate;
+
+        let calendarDate: moment.Moment = this.#getStartWeekSunday();
+
+        this.#dateArrayByWeek = [];
+        const weekNumber: number = Math.ceil(this.#getEndWeekSaturday().diff(this.#getStartWeekSunday(), "days") / 7);
+        for (let week = 0; week < weekNumber; week++) {
+
+            const weekRow: DateData[] = [];
+
+            for (let day = 0; day < 7; day++) {
+
+                weekRow.push(new DateData(moment(calendarDate), this.#currentDate.format('YYYY-MM') === calendarDate.format('YYYY-MM') ? true : false));
+                calendarDate.add(1, "days");
+            }
+
+            this.#dateArrayByWeek.push(weekRow);
+        }
+
     }
 
     #getStartWeekSunday = (): moment.Moment => {
@@ -25,11 +47,6 @@ export class CalendarData {
         return endDate.add(6 - youbiNum, "days");
     }
 
-    #getWeekNumber = (): number => {
-        return Math.ceil(this.#getEndWeekSaturday().diff(this.#getStartWeekSunday(), "days") / 7);
-    }
-
-
     public get currentDate(): moment.Moment {
         return this.#currentDate;
     }
@@ -45,45 +62,21 @@ export class CalendarData {
         return new CalendarData(prevMonth);
     }
 
-    getWeeks = () => {
-        let calendarDate: moment.Moment = this.#getStartWeekSunday();
-
-        let calendars: Date[][] = [];
-        for (let week = 0; week < this.#getWeekNumber(); week++) {
-
-            const weekRow: Date[] = [];
-
-            for (let day = 0; day < 7; day++) {
-
-                weekRow.push(new Date(moment(calendarDate)));
-                calendarDate.add(1, "days");
-            }
-
-            calendars.push(weekRow);
-        }
-
-        return calendars;
+    public get dateArrayByWeek(): DateData[][] {
+        return this.#dateArrayByWeek;
     }
 
-    isContained = (date: Date) => {
+    isContained = (date: DateData) => {
         return this.#currentDate.format('YYYY-MM') === date.date.format('YYYY-MM')
     }
 
-}
+    setEvents = (events: EventData[]) => {
+        const dateArray = this.#dateArrayByWeek.reduce((pre, current) => { pre.push(...current); return pre }, []);
 
-export class Date {
-
-    #date: moment.Moment;
-
-    constructor(date: moment.Moment) {
-        this.#date = date;
-    }
-
-    public get dateNumber(): number {
-        return this.#date.get('date');
-    }
-
-    public get date(): moment.Moment {
-        return this.#date;
+        dateArray.forEach(date => {
+            events.forEach(event => {
+                date.setEvent(event);
+            })
+        })
     }
 }
