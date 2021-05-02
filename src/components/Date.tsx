@@ -13,9 +13,20 @@ const Date = (props: { id: number, date: DateData }) => {
                 date.events.map(event => {
                     return (
                         <div key={event.id}>
-                            <div className='calendar-event' style={{ width: event.getWidth(date.date) + '%', backgroundColor: event.color }} draggable='true'>
-                                {event.name}
-                            </div>
+                            {
+                                (() => {
+                                    if (event.isDummyEvent(date.date)) {
+                                        return (<div style={{ height: '26px' }}></div>)
+                                    }
+                                    else {
+                                        return (
+                                            <div className='calendar-event' style={{ width: event.getWidth(date.date) + '%', backgroundColor: event.color }} draggable='true'>
+                                                {event.name}
+                                            </div>
+                                        );
+                                    }
+                                })()
+                            }
                         </div>
                     );
                 })
