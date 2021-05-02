@@ -40,7 +40,7 @@ export class EventData {
         // 金曜日(5)の場合、maxmRenderCountは2日間。イベント期間が3日間でも２日間にしなければダメ
         //        console.log(`date: ${date.format('YYYY-MM-DD')}, eventDays: ${eventDays}, maxRenderDateCount: ${maxRenderDateCount}`);
 
-        if (this.isSameWithStartDate(date)) {
+        if (this.#isSameWithStartDate(date)) {
 
             if (eventDays > maxRenderDateCount) {
                 return (maxRenderDateCount - 1) * 100 + 95;
@@ -49,17 +49,24 @@ export class EventData {
             }
         }
 
+        if (date.get('day') === 0) {
+            const remainingDays = this.#endDate.diff(date, 'days') + 1;
+            console.log(`date: ${date.format('YYYY-MM-DD')}, remainingDays: ${remainingDays}`);
+
+            return (remainingDays - 1) * 100 + 95;
+        }
+
         return 0;
     }
 
     isDummyEvent(date: moment.Moment): boolean {
-        if (!this.isSameWithStartDate(date) && date.get('date') !== 0)
+        if (!this.#isSameWithStartDate(date) && date.get('day') !== 0)
             return true;
 
         return false;
     }
 
-    isSameWithStartDate(date: moment.Moment): boolean {
+    #isSameWithStartDate = (date: moment.Moment): boolean => {
         return this.#startDate.format('YYYY-MM-DD') === date.format('YYYY-MM-DD')
     }
 
