@@ -17,9 +17,6 @@ const Date = (props: { id: number, date: DateType }) => {
 
     const dragEnd = (e: React.DragEvent<HTMLDivElement>, droppedDate: DateType) => {
         const eventId: string = e.dataTransfer.getData("eventId");
-        console.log(eventId);
-        console.log(droppedDate.date.format('YYYY-MM-DD'))
-        // どうしよう？？
         moveEvent(eventId, droppedDate);
     }
 
