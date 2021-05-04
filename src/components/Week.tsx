@@ -1,7 +1,8 @@
-import { DateData } from "./DateData";
 import Date from './Date';
 
-const Week = (props: { id: number, dateArray: DateData[] }) => {
+import { DateType } from './CalendarContext';
+
+const Week = (props: { id: number, dateArray: DateType[] }) => {
 
     const { id, dateArray } = props;
 

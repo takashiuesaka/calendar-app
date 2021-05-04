@@ -1,4 +1,7 @@
-import { EventData } from './EventData';
+//import { EventData } from './EventData';
+
+import dayjs from "dayjs";
+import { EventType } from "./CalendarContext";
 
 export const ServerAccess = () => {
     const events = [
@@ -23,10 +26,10 @@ export const ServerAccess = () => {
         { id: 20, name: "誕生日", startDate: "2021-01-30", endDate: "2021-01-30", color: "orange" },
     ];
 
-    const result: EventData[] = [];
+    const result: EventType[] = [];
 
     events.forEach(event => {
-        result.push(new EventData(event));
+        result.push({ id: event.id, name: event.name, startDate: dayjs(event.startDate), endDate: dayjs(event.endDate), color: event.color });
     })
 
     return result;

@@ -1,33 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import moment from 'moment';
-import { CalendarData } from './CalendarData';
+import React, { } from 'react';
 import Week from './Week';
-import { ServerAccess } from './ServerAccess';
 import './Calendar.css'
+
+import { CalendarContext } from './CalendarContext';
 
 const Calendar = () => {
 
-    const [calendarData, setCalendarData] = useState<CalendarData | undefined>();
-
-    const prevMonth = () => {
-        setCalendarData(data => {
-            const newData = data?.getPrevMonthCalendar();
-            // Server Access
-            const events = ServerAccess();
-            newData?.setEvents(events);
-            return newData;
-        });
-    }
-
-    const nextMonth = () => {
-        setCalendarData(data => {
-            const newData = data?.getNextMonthCalendar();
-            // Server Access
-            const events = ServerAccess();
-            newData?.setEvents(events);
-            return newData;
-        });
-    }
+    const [calendarDate, move, current] = CalendarContext.useContainer();
 
     const renderYoubi = () => {
 
@@ -40,27 +19,17 @@ const Calendar = () => {
         );
     }
 
-    useEffect(() => {
-        if (calendarData === undefined) {
-            const defaultData = new CalendarData(moment());
-            // Server Access
-            const events = ServerAccess();
-            defaultData.setEvents(events);
-            setCalendarData(defaultData);
-        }
-    }, [calendarData])
-
     return (
         <div className='content'>
-            <h2>カレンダー {calendarData?.currentDate.format('YYYY[年]M[月]')}</h2>
+            <h2>カレンダー {current.format('YYYY[年]M[月]')}</h2>
             <div className='button-area'>
-                <button onClick={prevMonth}>前の月</button>
-                <button onClick={nextMonth}>次の月</button>
+                <button onClick={move.toPrevMonth}>前の月</button>
+                <button onClick={move.toNextMonth}>次の月</button>
             </div>
             <div className='calendar'>
                 {renderYoubi()}
                 {
-                    calendarData?.dateArrayByWeek.map((weekData, weekIndex) => {
+                    calendarDate?.map((weekData, weekIndex) => {
                         return <Week id={weekIndex} dateArray={weekData} />
                     })
                 }
