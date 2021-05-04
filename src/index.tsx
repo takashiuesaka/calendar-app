@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
+import { CalendarContext } from './components/CalendarContext';
 
 import Calendar from './components/Calendar';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Calendar />
+    <CalendarContext.Provider>
+      <Calendar />
+    </CalendarContext.Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
